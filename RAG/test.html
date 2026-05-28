@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RAG Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .card {
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        #response {
+            white-space: pre-wrap;
+            background-color: #f5f5f5;
+            padding: 10px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h2>Test Backend Connection</h2>
+            <button id="testConnection">Test Connection</button>
+            <div id="connectionResult"></div>
+        </div>
+
+        <div class="card">
+            <h2>Register User</h2>
+            <input type="text" id="username" placeholder="Username">
+            <input type="email" id="email" placeholder="Email">
+            <input type="password" id="password" placeholder="Password">
+            <button id="register">Register</button>
+            <div id="registerResult"></div>
+        </div>
+
+        <div class="card">
+            <h2>Login</h2>
+            <input type="text" id="loginUsername" placeholder="Username">
+            <input type="password" id="loginPassword" placeholder="Password">
+            <button id="login">Login</button>
+            <div id="loginResult"></div>
+        </div>
+
+        <div class="card">
+            <h2>Ask Question</h2>
+            <textarea id="question" rows="3" placeholder="Enter your question"></textarea>
+            <button id="ask">Ask</button>
+            <div id="response"></div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('testConnection').addEventListener('click', async () => {
+            const resultDiv = document.getElementById('connectionResult');
+            resultDiv.textContent = 'Testing connection...';
+
+            try {
+                const response = await fetch('http://localhost:8000/', {
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    mode: 'cors'
+                });
+                const data = await response.json();
+                resultDiv.textContent = `Connection successful: ${JSON.stringify(data)}`;
+            } catch (error) {
+                resultDiv.textContent = `Connection failed: ${error.message}`;
+            }
+        });
+
+        document.getElementById('register').addEventListener('click', async () => {
+            const resultDiv = document.getElementById('registerResult');
+            resultDiv.textContent = 'Registering...';
+
+            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const response = await fetch('http://localhost:8000/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username, email, password })
+                });
+
+                const data = await response.json();
+                resultDiv.textContent = `Registration result: ${JSON.stringify(data)}`;
+            } catch (error) {
+                resultDiv.textContent = `Registration failed: ${error.message}`;
+            }
+        });
+
+        document.getElementById('login').addEventListener('click', async () => {
+            const resultDiv = document.getElementById('loginResult');
+            resultDiv.textContent = 'Logging in...';
+
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+
+            try {
+                const formData = new FormData();
+                formData.append('username', username);
+                formData.append('password', password);
+
+                const response = await fetch('http://localhost:8000/token', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    localStorage.setItem('token', data.access_token);
+                    resultDiv.textContent = 'Login successful!';
+                } else {
+                    resultDiv.textContent = `Login failed: ${data.detail}`;
+                }
+            } catch (error) {
+                resultDiv.textContent = `Login failed: ${error.message}`;
+            }
+        });
+
+        document.getElementById('ask').addEventListener('click', async () => {
+            const responseDiv = document.getElementById('response');
+            responseDiv.textContent = 'Processing question...';
+
+            const question = document.getElementById('question').value;
+            const token = localStorage.getItem('token');
+
+            if (!token) {
+                responseDiv.textContent = 'Please login first';
+                return;
+            }
+
+            try {
+                const formData = new FormData();
+                formData.append('question', question);
+
+                const response = await fetch('http://localhost:8000/ask', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    responseDiv.textContent = `Answer: ${data.answer}\n\nSources:\n${JSON.stringify(data.sources, null, 2)}`;
+                } else {
+                    responseDiv.textContent = `Error: ${data.detail}`;
+                }
+            } catch (error) {
+                responseDiv.textContent = `Error: ${error.message}`;
+            }
+        });
+    </script>
+</body>
+</html>

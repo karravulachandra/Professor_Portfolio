@@ -1,0 +1,59 @@
+# Sample Document for RAG Testing
+
+## Introduction
+
+This is a sample document to test the Retrieval-Augmented Generation (RAG) system. It contains various sections with information that can be used to test the question-answering capabilities.
+
+## What is RAG?
+
+Retrieval-Augmented Generation (RAG) is a technique that combines retrieval-based and generation-based approaches for natural language processing tasks. It works by first retrieving relevant documents or passages from a knowledge base and then using those retrieved documents as context for a language model to generate a response.
+
+The key components of a RAG system include:
+
+1. **Document Indexing**: Converting documents into vector representations using embeddings
+2. **Vector Storage**: Storing these embeddings in a vector database for efficient retrieval
+3. **Retrieval**: Finding the most relevant documents based on a query
+4. **Generation**: Using the retrieved documents as context for generating an answer
+
+## Benefits of RAG
+
+RAG offers several advantages over traditional language models:
+
+- **Up-to-date Information**: By retrieving information from a knowledge base, RAG can access the most current information
+- **Verifiable Answers**: Since answers are based on specific documents, the sources can be cited and verified
+- **Reduced Hallucinations**: By grounding responses in retrieved text, RAG reduces the tendency of language models to generate false information
+- **Domain Adaptation**: RAG can be specialized for specific domains by curating the knowledge base
+
+## Technical Implementation
+
+A typical RAG implementation involves the following steps:
+
+1. **Document Processing**: Breaking documents into chunks of appropriate size
+2. **Embedding Generation**: Converting text chunks into vector embeddings
+3. **Vector Storage**: Storing embeddings in a vector database like FAISS
+4. **Query Processing**: Converting user questions into the same embedding space
+5. **Similarity Search**: Finding the most similar document chunks to the query
+6. **Context Formation**: Combining retrieved chunks into a context window
+7. **Answer Generation**: Using an LLM to generate an answer based on the context
+
+## Example Use Cases
+
+RAG can be applied to various use cases:
+
+### Customer Support
+RAG can help customer support agents by retrieving relevant information from product documentation, previous support tickets, and knowledge bases.
+
+### Legal Research
+Lawyers can use RAG to quickly find relevant cases, statutes, and legal opinions related to their current case.
+
+### Medical Diagnosis
+Doctors can use RAG to retrieve information about symptoms, diseases, and treatments from medical literature.
+
+### Academic Research
+Researchers can use RAG to find relevant papers and extract information from a large corpus of academic literature.
+
+## Conclusion
+
+RAG represents a significant advancement in question-answering systems by combining the strengths of retrieval-based and generation-based approaches. It provides more accurate, verifiable, and up-to-date responses compared to traditional language models.
+
+This sample document should provide enough context to test various aspects of a RAG system, including chunking, embedding, retrieval, and answer generation.

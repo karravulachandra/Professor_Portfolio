@@ -1,0 +1,11 @@
+AI-Generated Background Image Description:
+
+The background image for the login and registration pages should be an AI-generated abstract visualization that represents knowledge and information retrieval. It should feature:
+
+1. A gradient background in deep blue to purple tones
+2. Abstract neural network-like patterns with glowing nodes and connections
+3. Subtle document or text visualizations floating in the background
+4. Particle effects that suggest data flowing through the network
+5. A modern, clean aesthetic that doesn't overwhelm the foreground content
+
+This image should be saved as "ai-background.jpg" in the public folder. For a real implementation, you would use an AI image generation tool like DALL-E, Midjourney, or Stable Diffusion to create this image based on the description above.
